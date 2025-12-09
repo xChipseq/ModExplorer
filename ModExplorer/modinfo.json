@@ -7,12 +7,11 @@
     "mods"
   ],
   "Icon": "ModExplorer.Resources.icon.png",
-  "License": "LGPLv3",
+  "License": "GPLv3",
   "Authors": [
     "Chipseq"
   ],
   "Links": {
-    "Website": "https://example.com",
-    "Source": "https://github.com/example/mod"
+    "Source": "https://github.com/xChipseq/ModExplorer"
   }
 }
