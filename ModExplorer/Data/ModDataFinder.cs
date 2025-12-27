@@ -10,7 +10,6 @@ using ModExplorer.Utilities;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace ModExplorer.Data;
 
@@ -26,7 +25,7 @@ public static class ModDataFinder
         {
             try
             {
-                ModData data = null;
+                JsonModData jsonData = null;
                 var assembly = info.Instance.GetType().Assembly;
                 foreach (var name in assembly.GetManifestResourceNames())
                 {
@@ -35,24 +34,33 @@ public static class ModDataFinder
                         using var stream = assembly.GetManifestResourceStream(name)!;
                         using StreamReader sr = new StreamReader(stream);
                         string json = sr.ReadToEnd();
-                        data = JsonSerializer.Deserialize<ModData>(json);
+                        jsonData = JsonSerializer.Deserialize<JsonModData>(json);
                     }
                 }
-                
-                data ??= new ModData();
-                data.ID = id;
-                data.Name ??= info.Metadata.Name;
-                data.Version = info.Metadata.Version.WithoutBuild().ToString();
-                data.Dependencies = info.Dependencies
+
+                var dependencies = info.Dependencies
                     .Where(x => x.Flags == BepInDependency.DependencyFlags.HardDependency)
                     .Select(x => x.DependencyGUID)
                     .ToArray();
+                var data = new ModData
+                {
+                    Name = jsonData?.Name ?? info.Metadata.Name,
+                    ID = id,
+                    Authors = jsonData?.Authors,
+                    Description = jsonData?.Description,
+                    Dependencies = dependencies,
+                    License = jsonData?.License,
+                    Links = jsonData?.Links,
+                    Tags = jsonData?.Tags,
+                    Version = info.Metadata.Version.WithoutBuild().ToString(),
+                    ConfigFile = (info.Instance as BasePlugin).Config
+                };
 
-                if (TryGetIcon(assembly, data, out var icon))
+                if (TryGetIcon(assembly, jsonData, out var icon))
                 {
                     data.Icon = icon;
                 }
-
+                
                 _mods.Add(data);
                 Logger<ModExplorerPlugin>.Info($"ModData for {id} created");
             }
@@ -63,19 +71,18 @@ public static class ModDataFinder
         }
     }
 
-    private static bool TryGetIcon(Assembly assembly, ModData data, out Sprite icon)
+    private static bool TryGetIcon(Assembly assembly, JsonModData data, out Sprite icon)
     {
         icon = null;
-        if (data.IconResource.IsNullOrWhiteSpace())
+        if (data.Icon.IsNullOrWhiteSpace())
             return false;
 
         try
         {
-            icon = SpriteTools.LoadSpriteFromPath(data.IconResource, assembly, 100f);
+            icon = SpriteTools.LoadSpriteFromPath(data.Icon, assembly, 100f);
         }
         catch (Exception e)
         {
-            Logger<ModExplorerPlugin>.Error($"Unable to get icon for {data.ID}\n{e.ToString()}");
             return false;
         }
 

@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using Il2CppInterop.Runtime.Injection;
+using ModExplorer.Components;
 using ModExplorer.Data;
 using Reactor;
 
@@ -15,8 +17,12 @@ public partial class ModExplorerPlugin : BasePlugin
     
     public override void Load()
     {
-        Assets.Load();
+        ClassInjector.RegisterTypeInIl2Cpp<ModExplorerComponent>();
+        ClassInjector.RegisterTypeInIl2Cpp<ModListElement>();
+        ClassInjector.RegisterTypeInIl2Cpp<LinkEventHandler>();
         Harmony.PatchAll();
+        
+        Assets.Load();
         IL2CPPChainloader.Instance.Finished += ModDataFinder.Initialize;
     }
 }
