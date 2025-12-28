@@ -13,6 +13,7 @@ public class ReactorShowerPatch
 {
     public static void Postfix()
     {
+        if (!ModExplorerPlugin.ModConfig.HideReactorCredits.Value) return;
         if (ReactorVersionShower.Text == null) return;
         ReactorVersionShower.Text.text = "Reactor " + Version.Parse(ReactorPlugin.Version).WithoutBuild();
         ReactorVersionShower.Text.text += "\nBepInEx " + Paths.BepInExVersion.WithoutBuild();
