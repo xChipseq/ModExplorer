@@ -23,10 +23,12 @@ public static class ModDataFinder
         var plugins = IL2CPPChainloader.Instance.Plugins;
         foreach (var (id, info) in plugins)
         {
+            var assembly = info.Instance.GetType().Assembly;
+            MiraCompatibility.ProcessPlugin(info, assembly);
+            
             try
             {
                 JsonModData jsonData = null;
-                var assembly = info.Instance.GetType().Assembly;
                 foreach (var name in assembly.GetManifestResourceNames())
                 {
                     if (name.EndsWith(".modinfo.json"))
@@ -46,17 +48,17 @@ public static class ModDataFinder
                 {
                     Name = jsonData?.Name ?? info.Metadata.Name,
                     ID = id,
-                    Authors = jsonData?.Authors,
-                    Description = jsonData?.Description,
+                    Authors = jsonData?.Authors ?? [],
+                    Description = jsonData?.Description ?? string.Empty,
                     Dependencies = dependencies,
-                    License = jsonData?.License,
-                    Links = jsonData?.Links,
-                    Tags = jsonData?.Tags,
+                    License = jsonData?.License ?? string.Empty,
+                    Links = jsonData?.Links ?? [],
+                    Tags = jsonData?.Tags ?? [],
                     Version = info.Metadata.Version.WithoutBuild().ToString(),
                     ConfigFile = (info.Instance as BasePlugin).Config
                 };
 
-                if (TryGetIcon(assembly, jsonData, out var icon))
+                if (jsonData != null && TryGetIcon(assembly, jsonData, out var icon))
                 {
                     data.Icon = icon;
                 }
@@ -71,6 +73,11 @@ public static class ModDataFinder
         }
     }
 
+    public static ModData GetModData(string id)
+    {
+        return _mods.First(x => x.ID == id);
+    }
+
     private static bool TryGetIcon(Assembly assembly, JsonModData data, out Sprite icon)
     {
         icon = null;
@@ -81,7 +88,7 @@ public static class ModDataFinder
         {
             icon = SpriteTools.LoadSpriteFromPath(data.Icon, assembly, 100f);
         }
-        catch (Exception e)
+        catch
         {
             return false;
         }

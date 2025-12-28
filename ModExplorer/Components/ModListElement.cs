@@ -2,15 +2,12 @@
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.InteropTypes.Fields;
 using ModExplorer.Data;
-using Reactor.Utilities;
-using Reactor.Utilities.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ModExplorer.Components;
 
-[RegisterInIl2Cpp]
 public class ModListElement(IntPtr cppPtr) : MonoBehaviour(cppPtr)
 {
     public ModData ModData;
@@ -34,7 +31,13 @@ public class ModListElement(IntPtr cppPtr) : MonoBehaviour(cppPtr)
         text.Value.text =
             $"{data.Name}\n<color=grey><font=\"LiberationSans SDF\"><size=24>v{data.Version}</size></font></color>";
         if (data.Icon)
+        {
             icon.Value.sprite = data.Icon;
-        configButton.Value.gameObject.SetActive(false); // Temporary
+        }
+        else
+        {
+            icon.Value.gameObject.SetActive(false);
+            text.Value.transform.localPosition -= new Vector3(107, 0, 0);
+        }
     }
 }
