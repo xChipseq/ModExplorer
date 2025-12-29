@@ -127,8 +127,6 @@ public class ModExplorerComponent(IntPtr cppPtr) : MonoBehaviour(cppPtr)
         
         infoLinkText.Value.GetComponent<LinkEventHandler>().onLinkClicked += Application.OpenURL;
 
-        infoTab.Value.SetActive(false);
-        configTab.Value.SetActive(false);
         StartCoroutine(CoScrollToTop(modListContainer.Value).WrapToIl2Cpp());
     }
 
