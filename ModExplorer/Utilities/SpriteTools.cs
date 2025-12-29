@@ -1,4 +1,4 @@
-﻿// I stole this from Mira API
+﻿// I won't lie, I stole this from MiraAPI
 // https://github.com/All-Of-Us-Mods/MiraAPI
 using System;
 using System.Reflection;

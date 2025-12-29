@@ -76,17 +76,22 @@ public static class MiraCompatibility
             return false;
         }
         
+        return miraPlugins.TryGetValue(modId, out var plugin) && moddedOptions.Contains(definition);
+    }
+    
+    public static bool IsMiraRoleOption(string modId, ConfigDefinition definition)
+    {
+        if (!IsMiraInstalled)
+        {
+            return false;
+        }
+        
         if (!miraPlugins.TryGetValue(modId, out var plugin))
         {
             return false;
         }
 
         var entries = roleEntries[modId];
-        if (definition.Section == "Roles" && entries.Any(x => x == definition.Key))
-        {
-            return true;
-        }
-        
-        return moddedOptions.Contains(definition);
+        return definition.Section == "Roles" && entries.Any(x => x == definition.Key);
     }
 }
