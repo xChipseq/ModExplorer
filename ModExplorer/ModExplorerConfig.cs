@@ -4,15 +4,11 @@ namespace ModExplorer;
 
 public class ModExplorerConfig
 {
-    public ConfigEntry<bool> HideReactorCredits { get; init; }
-    public ConfigEntry<bool> PrettyCategories { get; init; }
-    public ConfigEntry<bool> PrettySettings { get; init; }
-    public ConfigEntry<bool> ExcludeMiraOptions { get; init; }
-    public ConfigEntry<bool> ExcludeMiraRoleOptions { get; init; }
-    
-    public ConfigEntry<int> IntSetting { get; init; }
-    public ConfigEntry<float> FloatSetting { get; init; }
-    public ConfigEntry<byte> ByteSetting { get; init; }
+    public ConfigEntry<bool> HideReactorCredits { get; }
+    public ConfigEntry<bool> PrettyCategories { get; }
+    public ConfigEntry<bool> PrettySettings { get; }
+    public ConfigEntry<bool> ExcludeMiraOptions { get; }
+    public ConfigEntry<bool> ExcludeMiraRoleOptions { get; }
     
     public ModExplorerConfig(ConfigFile config)
     {
@@ -26,9 +22,5 @@ public class ModExplorerConfig
             "Excludes custom game options in configs from plugins that use Mira API");
         ExcludeMiraRoleOptions = config.Bind("Mod Configs", "Exclude MiraAPI Role Options", true,
             "Excludes custom role chance and count options in configs from plugins that use Mira API");
-        
-        IntSetting = config.Bind("Example", "Example Int", 0);
-        FloatSetting = config.Bind("Example", "Example Float", 4.2f);
-        ByteSetting = config.Bind("Example", "Example Byte", (byte)8);
     }
 }
