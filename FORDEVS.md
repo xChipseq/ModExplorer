@@ -1,5 +1,5 @@
 # Adding Additional Metadata
-To make **Mod Explorer** display the metadata of your mod, you need to add a `modInfo.json` file somewhere inside your project and include it with **EmbeddedResource**. The mod will try to load this file out of your project and if it finds one, will use it in the info tab.
+To make **Mod Explorer** display the metadata of your mod, you need to add a `modinfo.json` file somewhere inside your project and include it with **EmbeddedResource**. The mod will try to load this file out of your project and if it finds one, will use it in the info tab.
 
 ### Here's an example setup
 ![Example modInfo.json File](./Images/ForDevsExample.png)
@@ -14,3 +14,4 @@ To make **Mod Explorer** display the metadata of your mod, you need to add a `mo
 - `Icon` - Project relative path to the icon of your mod
 > [!Warning]
 > The icon file **ALSO** needs to be embedded into the project, otherwise it cannot be loaded
+
